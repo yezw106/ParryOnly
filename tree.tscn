@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://bgyixp5a17cye"]
+
+[ext_resource type="Texture2D" uid="uid://0tuq1r1cb23p" path="res://tileset/craftpix-net-665131-free-fields-tileset-pixel-art-for-tower-defense/2 Objects/1 Shadow/5.png" id="1_nnvrw"]
+[ext_resource type="Texture2D" uid="uid://dtqhbntgv3ox1" path="res://tileset/craftpix-net-665131-free-fields-tileset-pixel-art-for-tower-defense/2 Objects/7 Decor/Tree1.png" id="2_gvmkm"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_d2g23"]
+radius = 14.0
+height = 42.0
+
+[node name="Tree" type="Node2D"]
+
+[node name="shadow" type="Sprite2D" parent="."]
+position = Vector2(2, 16)
+scale = Vector2(0.54, 0.54)
+texture = ExtResource("1_nnvrw")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.555, 0.555)
+texture = ExtResource("2_gvmkm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_d2g23")
