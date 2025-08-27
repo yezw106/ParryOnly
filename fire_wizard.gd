@@ -9,7 +9,7 @@ var marked_for_deletion := false
 
 var state: State = State.IDLE
 var speed := 350.0
-var attack_range := 50.0
+var attack_range := 60.0
 var attack_cooldown := 2.0
 var attack_timer := 0.0
 var is_dead := false
@@ -54,12 +54,13 @@ func start_attack(player):
 	state = State.ATTACK
 	attack_timer = attack_cooldown
 	anim.play("attack1")
-
+	$FireSFX.play()
+	
 	# 在攻击帧检查是否被弹反（延迟调用更真实）
 	await get_tree().create_timer(0.5).timeout
 	if player and player.try_parry(self):
-		# 被弹反 → 播放受伤动画
-		on_parried()
+		# 被弹反
+		pass
 	else:
 		# 如果玩家没弹反，就可以在这里扣血或做别的事
 		print("Enemy attack hit!")
@@ -72,6 +73,7 @@ func start_hurt():
 func on_parried():
 	if is_dead:
 		return
+	await anim.animation_finished
 	state = State.HURT
 	anim.play("hurt")
 	
@@ -97,4 +99,4 @@ func set_facing_right(facing: bool):
 		anim.flip_h = false
 	else:
 		anim.flip_h = true
-		$Shadow.position.x += 15
+		$Shadow.position.x += 20

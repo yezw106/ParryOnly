@@ -1,9 +1,37 @@
-[gd_scene load_steps=8 format=3 uid="uid://pi7rsftslen5"]
+[gd_scene load_steps=22 format=3 uid="uid://pi7rsftslen5"]
 
 [ext_resource type="Script" uid="uid://fuegrdq0ay1h" path="res://shield.gd" id="1_dmnlx"]
 [ext_resource type="Texture2D" uid="uid://jjj3s1f1m3jl" path="res://sprites/2 GraveRobber/Shield.png" id="2_dmnlx"]
+[ext_resource type="Texture2D" uid="uid://d3vlomc8q07pe" path="res://sprites/craftpix-net-529677-free-wizard-sprite-sheets-pixel-art/Fire Wizard/Charge.png" id="3_dmnlx"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4re53"]
+
+[sub_resource type="Animation" id="Animation_pbfsw"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Glow:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.07, 0.07)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Glow:self_modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0.698039)]
+}
 
 [sub_resource type="Animation" id="Animation_q13i1"]
 resource_name = "apear"
@@ -73,39 +101,104 @@ tracks/2/keys = {
 }]
 }
 
-[sub_resource type="Animation" id="Animation_pbfsw"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Glow:scale")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0.07, 0.07)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Glow:self_modulate")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 0.698039)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_5tmop"]
 _data = {
 &"RESET": SubResource("Animation_pbfsw"),
 &"apear": SubResource("Animation_q13i1"),
 &"disapear": SubResource("Animation_pylmc")
 }
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0vxx4"]
+atlas = ExtResource("3_dmnlx")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4re53"]
+atlas = ExtResource("3_dmnlx")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tgr6k"]
+atlas = ExtResource("3_dmnlx")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xc41h"]
+atlas = ExtResource("3_dmnlx")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_41k7r"]
+atlas = ExtResource("3_dmnlx")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gdxae"]
+atlas = ExtResource("3_dmnlx")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_275sl"]
+atlas = ExtResource("3_dmnlx")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kjr8o"]
+atlas = ExtResource("3_dmnlx")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vivl0"]
+atlas = ExtResource("3_dmnlx")
+region = Rect2(512, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1e71e"]
+atlas = ExtResource("3_dmnlx")
+region = Rect2(576, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mvqs3"]
+atlas = ExtResource("3_dmnlx")
+region = Rect2(640, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n164e"]
+atlas = ExtResource("3_dmnlx")
+region = Rect2(704, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wspo6"]
+animations = [{
+"frames": [{
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_0vxx4")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_4re53")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_tgr6k")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_xc41h")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_41k7r")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_gdxae")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_275sl")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_kjr8o")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_vivl0")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_1e71e")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_mvqs3")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_n164e")
+}],
+"loop": false,
+"name": &"default",
+"speed": 12.0
+}]
 
 [node name="Shield" type="Area2D"]
 script = ExtResource("1_dmnlx")
@@ -126,3 +219,10 @@ libraries = {
 autoplay = "apear"
 
 [node name="SFX" type="AudioStreamPlayer2D" parent="."]
+
+[node name="FireEffect" type="AnimatedSprite2D" parent="."]
+rotation = 3.14159
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_wspo6")
+frame = 11
+frame_progress = 1.0

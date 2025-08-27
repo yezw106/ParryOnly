@@ -1,4 +1,4 @@
-[gd_scene load_steps=65 format=3 uid="uid://nfpskfjecux2"]
+[gd_scene load_steps=66 format=3 uid="uid://nfpskfjecux2"]
 
 [ext_resource type="Script" uid="uid://yyv0b83ksqus" path="res://fire_wizard.gd" id="1_k2y55"]
 [ext_resource type="Texture2D" uid="uid://dkrnsxum5p1di" path="res://sprites/shadow.png" id="1_vhiht"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://3g1rmjwowpd5" path="res://sprites/craftpix-net-529677-free-wizard-sprite-sheets-pixel-art/Fire Wizard/Jump.png" id="6_ntj8p"]
 [ext_resource type="Texture2D" uid="uid://cwkyvjt0cyxeh" path="res://sprites/craftpix-net-529677-free-wizard-sprite-sheets-pixel-art/Fire Wizard/Run.png" id="7_ydtw5"]
 [ext_resource type="Texture2D" uid="uid://cggakuscad1kk" path="res://sprites/craftpix-net-529677-free-wizard-sprite-sheets-pixel-art/Fire Wizard/Walk.png" id="8_0knqg"]
+[ext_resource type="AudioStream" uid="uid://crrx661ln6iul" path="res://audio/fire_out.mp3" id="10_ntj8p"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_43df2"]
 radius = 23.0
@@ -241,34 +242,40 @@ animations = [{
 "duration": 0.8,
 "texture": SubResource("AtlasTexture_yiboq")
 }, {
-"duration": 1.0,
+"duration": 0.8,
 "texture": SubResource("AtlasTexture_6re1p")
 }, {
-"duration": 1.0,
+"duration": 0.8,
 "texture": SubResource("AtlasTexture_ntj8p")
 }, {
-"duration": 1.0,
+"duration": 1.2,
 "texture": SubResource("AtlasTexture_ydtw5")
 }, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ydtw5")
-}, {
-"duration": 1.0,
+"duration": 1.2,
 "texture": SubResource("AtlasTexture_0knqg")
 }, {
-"duration": 1.0,
+"duration": 1.2,
 "texture": SubResource("AtlasTexture_svmf2")
 }, {
-"duration": 1.0,
+"duration": 1.2,
 "texture": SubResource("AtlasTexture_0knqg")
 }, {
-"duration": 1.0,
+"duration": 1.2,
 "texture": SubResource("AtlasTexture_svmf2")
 }, {
-"duration": 1.0,
+"duration": 1.2,
 "texture": SubResource("AtlasTexture_0knqg")
 }, {
-"duration": 1.0,
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_svmf2")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_0knqg")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_svmf2")
+}, {
+"duration": 1.2,
 "texture": SubResource("AtlasTexture_ktcx4")
 }, {
 "duration": 0.8,
@@ -453,3 +460,6 @@ sprite_frames = SubResource("SpriteFrames_k2y55")
 animation = &"attack1"
 frame = 17
 frame_progress = 1.0
+
+[node name="FireSFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("10_ntj8p")

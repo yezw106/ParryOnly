@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3 uid="uid://ds086gf6748cv"]
+[gd_scene load_steps=50 format=3 uid="uid://ds086gf6748cv"]
 
 [ext_resource type="Script" uid="uid://8whvu4lbqfxy" path="res://player.gd" id="1_onrkg"]
 [ext_resource type="Texture2D" uid="uid://dr773rynd21vq" path="res://sprites/2 GraveRobber/GraveRobber_attack1.png" id="2_i3pqv"]
@@ -10,9 +10,11 @@
 [ext_resource type="Texture2D" uid="uid://k5lp0sf2ndhq" path="res://sprites/2 GraveRobber/GraveRobber_hurt.png" id="4_2hs0m"]
 [ext_resource type="AudioStream" uid="uid://dl4gefwf3rmq4" path="res://audio/kenney_impact-sounds/Audio/impactMining_001.ogg" id="7_1jxqw"]
 [ext_resource type="AudioStream" uid="uid://bkw0buq511tn1" path="res://audio/kenney_impact-sounds/Audio/impactMining_003.ogg" id="8_b26j0"]
+[ext_resource type="Texture2D" uid="uid://cusby8u87esa7" path="res://sprites/2 GraveRobber/GraveRobber_spin.png" id="9_606se"]
 [ext_resource type="AudioStream" uid="uid://d2pntjx7uxum5" path="res://audio/kenney_impact-sounds/Audio/impactMining_004.ogg" id="9_n7ghd"]
 [ext_resource type="AudioStream" uid="uid://cquf0a0kpy8ow" path="res://audio/gameover.wav" id="11_nvl01"]
 [ext_resource type="PackedScene" uid="uid://bg2fwex715a6q" path="res://parry_effect.tscn" id="12_ivps1"]
+[ext_resource type="AudioStream" uid="uid://drqvwyn6dic8g" path="res://audio/04_Fire_explosion_04_medium.wav" id="15_606se"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1jxqw"]
 height = 42.0
@@ -88,6 +90,34 @@ region = Rect2(192, 0, 48, 48)
 [sub_resource type="AtlasTexture" id="AtlasTexture_iruf7"]
 atlas = ExtResource("4_1jxqw")
 region = Rect2(240, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j5n4i"]
+atlas = ExtResource("9_606se")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_634y6"]
+atlas = ExtResource("9_606se")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_efrwb"]
+atlas = ExtResource("9_606se")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hiqhm"]
+atlas = ExtResource("9_606se")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tkwlq"]
+atlas = ExtResource("9_606se")
+region = Rect2(192, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hl5qd"]
+atlas = ExtResource("9_606se")
+region = Rect2(240, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ek41f"]
+atlas = ExtResource("9_606se")
+region = Rect2(288, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5tmop"]
 atlas = ExtResource("4_2hs0m")
@@ -189,6 +219,32 @@ animations = [{
 "speed": 6.0
 }, {
 "frames": [{
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_j5n4i")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_634y6")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_efrwb")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_hiqhm")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_tkwlq")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_hl5qd")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_ek41f")
+}],
+"loop": false,
+"name": &"fw_parry",
+"speed": 7.0
+}, {
+"frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_5tmop")
 }, {
@@ -240,7 +296,9 @@ shape = SubResource("CapsuleShape2D_1jxqw")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(8, -8)
 sprite_frames = SubResource("SpriteFrames_606se")
-animation = &"attack2"
+animation = &"fw_parry"
+frame = 6
+frame_progress = 1.0
 
 [node name="ParrySFX1" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("7_1jxqw")
@@ -250,3 +308,7 @@ stream = ExtResource("8_b26j0")
 
 [node name="DeathSFX" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("11_nvl01")
+
+[node name="ParrySFX4" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("15_606se")
+volume_db = 9.37

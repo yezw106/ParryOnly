@@ -47,6 +47,11 @@ func game_over():
 		if is_instance_valid(e):
 			e.queue_free()
 	
+	var wiz = get_tree().get_nodes_in_group("firewizard")
+	for w in wiz:
+		if is_instance_valid(w):
+			w.queue_free()
+	
 	# 显示 UI 的 Game Over
 	var ui = get_node_or_null("UI")
 	if ui:
@@ -61,15 +66,16 @@ func _on_spawn_timer_timeout():
 	# ✅ 判断是否解锁 FireWizard
 	if not fire_wizard_unlocked and normal_kill_count >= 1:
 		fire_wizard_unlocked = true
-
+	spawn_fire_wizard()
+	spawn_timer.wait_time = randf_range(3.0, 5.0)   # FireWizard 刷新间隔
 	# ✅ 刷新逻辑
-	if fire_wizard_unlocked and randf() < 0.2:  
-		spawn_fire_wizard()
-		spawn_timer.wait_time = randf_range(3.0, 5.0)   # FireWizard 刷新间隔
-
-	else:
-		spawn_enemy()
-		spawn_timer.wait_time = randf_range(0.5, 0.8)   # 普通敌人刷间隔
+	#if fire_wizard_unlocked and randf() < 0.2:  
+		#spawn_fire_wizard()
+		#spawn_timer.wait_time = randf_range(3.0, 5.0)   # FireWizard 刷新间隔
+#
+	#else:
+		#spawn_enemy()
+		#spawn_timer.wait_time = randf_range(0.5, 0.8)   # 普通敌人刷间隔
 
 	spawn_timer.start()
 
