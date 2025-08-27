@@ -40,7 +40,7 @@ func game_over():
 	if $BattleBGM.playing:
 		$BattleBGM.stop()
 		
-	await get_tree().create_timer(0.8).timeout
+	await get_tree().create_timer(0.6).timeout
 	# 清理敌人
 	var enemies = get_tree().get_nodes_in_group("enemy")
 	for e in enemies:
@@ -62,20 +62,17 @@ func _on_spawn_timer_timeout():
 	if not is_instance_valid(player) or player.is_dead:
 		return  # 玩家死了就不再刷敌人
 
-
 	# ✅ 判断是否解锁 FireWizard
 	if not fire_wizard_unlocked and normal_kill_count >= 1:
 		fire_wizard_unlocked = true
-	spawn_fire_wizard()
-	spawn_timer.wait_time = randf_range(3.0, 5.0)   # FireWizard 刷新间隔
 	# ✅ 刷新逻辑
-	#if fire_wizard_unlocked and randf() < 0.2:  
-		#spawn_fire_wizard()
-		#spawn_timer.wait_time = randf_range(3.0, 5.0)   # FireWizard 刷新间隔
-#
-	#else:
-		#spawn_enemy()
-		#spawn_timer.wait_time = randf_range(0.5, 0.8)   # 普通敌人刷间隔
+	if fire_wizard_unlocked and randf() < 0.2:  
+		spawn_fire_wizard()
+		spawn_timer.wait_time = randf_range(3.0, 5.0)   # FireWizard 刷新间隔
+
+	else:
+		spawn_enemy()
+		spawn_timer.wait_time = randf_range(0.55, 0.8)   # 普通敌人刷间隔
 
 	spawn_timer.start()
 

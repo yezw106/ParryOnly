@@ -9,7 +9,7 @@ var marked_for_deletion := false
 
 var state: State = State.IDLE
 var speed := 350.0
-var attack_range := 10.0
+var attack_range := 12.0
 var attack_cooldown := 2.0
 var attack_timer := 0.0
 var is_dead := false

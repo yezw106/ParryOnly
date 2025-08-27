@@ -259,22 +259,22 @@ animations = [{
 "speed": 8.0
 }, {
 "frames": [{
-"duration": 0.3,
+"duration": 0.2,
 "texture": SubResource("AtlasTexture_dxifv")
 }, {
-"duration": 0.3,
+"duration": 0.2,
 "texture": SubResource("AtlasTexture_pwjut")
 }, {
-"duration": 0.3,
+"duration": 0.2,
 "texture": SubResource("AtlasTexture_n0g06")
 }, {
-"duration": 0.3,
+"duration": 0.2,
 "texture": SubResource("AtlasTexture_ar8e5")
 }, {
-"duration": 0.3,
+"duration": 0.2,
 "texture": SubResource("AtlasTexture_doop2")
 }, {
-"duration": 0.3,
+"duration": 0.2,
 "texture": SubResource("AtlasTexture_j1pr3")
 }],
 "loop": false,
@@ -374,5 +374,3 @@ shape = SubResource("CapsuleShape2D_doop2")
 position = Vector2(8, -10)
 sprite_frames = SubResource("SpriteFrames_wujgv")
 animation = &"death"
-frame = 5
-frame_progress = 1.0

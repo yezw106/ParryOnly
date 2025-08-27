@@ -16,8 +16,9 @@ enum State { IDLE, PARRY, HURT }
 @export var shield_scene: PackedScene   # 光罩预制体
 @export var parry_duration := 0.5       # parry 动画持续时长（秒）
 @export var parry_timing := 0.5         # parry 有效判定窗口时长（秒）
+@export var parry_timing_fw := 0.3         # parry 有效判定窗口时长（秒）
 
-@export var fw_parry_required := 0.8  # FireWizard 攻击持续时间，必须撑满
+@export var fw_parry_required := 0.7  # FireWizard 攻击持续时间，必须撑满
 var fw_parry_mode := false      # 是否处于 FireWizard 弹反监控模式
 var fw_parry_timer := 0.0       # 记录已经坚持了多久
 var fw_parry_attacker_current: Node = null   # 当前正在防御的 firewizard
@@ -29,6 +30,8 @@ var facing_right := true
 var parry_window_open := false
 var is_dead := false
 var parry_animations = ["attack1", "attack2"]
+
+enum Enemy_Type { NOENEMY, ENEMY, FIREWIZARD }
 
 func _ready():
 	anim.play("idle")
@@ -49,7 +52,7 @@ func _process(delta: float):
 			# parry 窗口计时
 			if anim.frame * (1.0 / anim.speed_scale / anim.get_sprite_frames().get_animation_speed("attack1")) > parry_timing:
 				parry_window_open = false
-						# 🔥 FireWizard 特殊监控
+			# 🔥 FireWizard 特殊监控
 			if fw_parry_mode:
 				if not Input.is_action_pressed("parry"):
 					# 松开就失败
@@ -64,6 +67,37 @@ func _process(delta: float):
 		State.HURT:
 			pass # 在受伤状态，等待动画结束
 
+func get_neareast_ememy_type() -> Enemy_Type:
+	var enemies = get_tree().get_nodes_in_group("enemy")
+	var wiz = get_tree().get_nodes_in_group("firewizard")
+	if enemies.size() == 0 and wiz.size() == 0:
+		return Enemy_Type.NOENEMY;
+	elif enemies.size() == 0:
+		return Enemy_Type.FIREWIZARD
+	elif wiz.size() == 0:
+		return Enemy_Type.ENEMY
+	
+	var nearest = enemies[0]
+	var min_dist = global_position.distance_to(nearest.global_position)
+	
+	for e in enemies:
+		var d = global_position.distance_to(e.global_position)
+		if d < min_dist:
+			nearest = e
+			min_dist = d
+	
+	var nearest_wiz = wiz[0]
+	var min_dist_wiz = global_position.distance_to(nearest_wiz.global_position)
+	
+	for w in enemies:
+		var d = global_position.distance_to(w.global_position)
+		if d < min_dist:
+			nearest_wiz = w
+			min_dist_wiz = d
+	if min_dist_wiz - nearest_wiz.attack_range - 20 <= min_dist - nearest.attack_range:
+		return Enemy_Type.FIREWIZARD
+	else:
+		return Enemy_Type.ENEMY
 
 func is_facing_nearest_enemy() -> bool:
 	var enemies = get_tree().get_nodes_in_group("enemy")
@@ -142,7 +176,7 @@ func play_parry_effect(is_facing_right: bool):
 func start_parry():
 	state = State.PARRY
 	parry_window_open = true
-	if fw_parry_mode:
+	if get_neareast_ememy_type() == Enemy_Type.FIREWIZARD:
 		anim.play("fw_parry")
 	else:
 		var anim_name = parry_animations[randi() % parry_animations.size()]
@@ -193,6 +227,8 @@ func normal_parry_success(attacker: Node) -> bool:
 func fw_parry_success(attacker: Node):
 	fw_parry_mode = false
 	fw_parry_timer = 0
+	var sfx = parry_sfx_list[randi() % parry_sfx_list.size()]
+	sfx.play()
 	$ParrySFX4.play()
 	print("FireWizard Parry success (hold 1s)!")
 	play_parry_effect(facing_right)
@@ -243,11 +279,12 @@ func _on_animation_finished():
 				anim.play("fw_parry")
 			else:
 				state = State.IDLE
+				anim.play("idle")
 		else:
 			anim.play("death")
-	elif anim.animation == "fw_parry":
+	elif anim.animation in ["fw_parry"]:
 		if not is_dead: 
-			if Input.is_action_pressed("parry"):
+			if Input.is_action_pressed("fw_parry"):
 				state = State.PARRY
 				anim.play("fw_parry")
 			else:

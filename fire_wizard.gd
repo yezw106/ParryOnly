@@ -57,7 +57,7 @@ func start_attack(player):
 	$FireSFX.play()
 	
 	# 在攻击帧检查是否被弹反（延迟调用更真实）
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(0.4).timeout
 	if player and player.try_parry(self):
 		# 被弹反
 		pass
@@ -73,8 +73,8 @@ func start_hurt():
 func on_parried():
 	if is_dead:
 		return
-	await anim.animation_finished
 	state = State.HURT
+	await anim.animation_finished
 	anim.play("hurt")
 	
 func _on_animation_finished():
@@ -84,7 +84,6 @@ func _on_animation_finished():
 	elif anim.animation == "death":
 		is_dead = true
 		queue_free()
-
 
 
 # 敌人死亡（玩家 parry 成功时调用）
