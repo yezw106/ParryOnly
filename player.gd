@@ -24,6 +24,13 @@ var fw_parry_timer := 0.0       # 记录已经坚持了多久
 var fw_parry_attacker_current: Node = null   # 当前正在防御的 firewizard
 var fw_attack_angle:float = 0.0
 
+# Eagleman 弹反逻辑相关
+var eagle_parry_count := 0         # 当前已成功输入次数
+var eagle_parry_timer := 0.0       # 距离上次输入的时间
+var eagle_parry_max_interval := 0.6 # 最大间隔
+var eagle_parry_required := 3      # 需要输入次数
+var eagle_parry_attacker_current: Node = null   # 当前正在防御的 firewizard
+
 var state: State = State.IDLE
 var facing_right := true
 # 判定窗口控制
@@ -31,7 +38,7 @@ var parry_window_open := false
 var is_dead := false
 var parry_animations = ["attack1", "attack2"]
 
-enum Enemy_Type { NOENEMY, ENEMY, FIREWIZARD }
+enum Enemy_Type { NOENEMY, ENEMY, FIREWIZARD , EAGLEMAN }
 
 func _ready():
 	anim.play("idle")
@@ -66,77 +73,85 @@ func _process(delta: float):
 						fw_parry_success(fw_parry_attacker_current)
 		State.HURT:
 			pass # 在受伤状态，等待动画结束
+	# 追踪 eagleman 连击输入的间隔
+	if eagle_parry_count > 0:
+		eagle_parry_timer += delta
+		if eagle_parry_timer > eagle_parry_max_interval:
+			# 超时 → 失败
+			eagle_parry_count = 0
+			die()
 
 func get_neareast_ememy_type() -> Enemy_Type:
 	var enemies = get_tree().get_nodes_in_group("enemy")
 	var wiz = get_tree().get_nodes_in_group("firewizard")
-	if enemies.size() == 0 and wiz.size() == 0:
-		return Enemy_Type.NOENEMY;
-	elif enemies.size() == 0:
-		return Enemy_Type.FIREWIZARD
-	elif wiz.size() == 0:
-		return Enemy_Type.ENEMY
-	
-	var nearest = enemies[0]
-	var min_dist = global_position.distance_to(nearest.global_position)
-	
+	var eagle = get_tree().get_nodes_in_group("eagleman")
+
+	# 如果三类敌人都没有
+	if enemies.is_empty() and wiz.is_empty() and eagle.is_empty():
+		return Enemy_Type.NOENEMY
+
+	# 定义“最近敌人”存储
+	var nearest : Node = null
+	var nearest_type : Enemy_Type = Enemy_Type.NOENEMY
+	var min_dist := INF
+
+	# 🔹 检查 enemy
 	for e in enemies:
-		var d = global_position.distance_to(e.global_position)
+		var d = global_position.distance_to(e.global_position) - e.attack_range
 		if d < min_dist:
-			nearest = e
 			min_dist = d
-	
-	var nearest_wiz = wiz[0]
-	var min_dist_wiz = global_position.distance_to(nearest_wiz.global_position)
-	
-	for w in enemies:
-		var d = global_position.distance_to(w.global_position)
+			nearest = e
+			nearest_type = Enemy_Type.ENEMY
+
+	# 🔹 检查 firewizard
+	for w in wiz:
+		var d = global_position.distance_to(w.global_position) - w.attack_range - 50
 		if d < min_dist:
-			nearest_wiz = w
-			min_dist_wiz = d
-	if min_dist_wiz - nearest_wiz.attack_range - 20 <= min_dist - nearest.attack_range:
-		return Enemy_Type.FIREWIZARD
-	else:
-		return Enemy_Type.ENEMY
+			min_dist = d
+			nearest = w
+			nearest_type = Enemy_Type.FIREWIZARD
+
+	# 🔹 检查 eagleman
+	for ea in eagle:
+		var d = global_position.distance_to(ea.global_position) - ea.attack_range -10
+		if d < min_dist:
+			min_dist = d
+			nearest = ea
+			nearest_type = Enemy_Type.EAGLEMAN
+	return nearest_type
 
 func is_facing_nearest_enemy() -> bool:
-	var enemies = get_tree().get_nodes_in_group("enemy")
-	if enemies.size() == 0:
-		return false;
+	var enemies = []
+	enemies.append_array(get_tree().get_nodes_in_group("enemy"))
+	enemies.append_array(get_tree().get_nodes_in_group("firewizard"))
+	enemies.append_array(get_tree().get_nodes_in_group("eagleman"))
+
+	if enemies.is_empty():
+		return false
 	
+	# 找到最近的敌人
 	var nearest = enemies[0]
 	var min_dist = global_position.distance_to(nearest.global_position)
-	
 	for e in enemies:
-		var d = global_position.distance_to(e.global_position)
+		var attack_range = nearest.attack_range if nearest.has_method("attack_range") else 0
+		# Firewizard 有特殊额外距离（例如 -20）
+		if e.is_in_group("firewizard"):
+			attack_range += 50
+		if e.is_in_group("eagleman"):
+			attack_range += 10
+		var d = global_position.distance_to(e.global_position) - attack_range
 		if d < min_dist:
-			nearest = e
 			min_dist = d
+			nearest = e
 	
-	if (facing_right and (nearest.global_position.x > global_position.x))  or (not facing_right and (nearest.global_position.x < global_position.x)):
+	# 判断是否朝向最近的敌人
+	if (facing_right and nearest.global_position.x > global_position.x) \
+	or (not facing_right and nearest.global_position.x < global_position.x):
 		return true
 	else:
 		return false
 		
 
-func is_facing_nearest_wiz() -> bool:
-	var wiz = get_tree().get_nodes_in_group("firewizard")
-	if wiz.size() == 0:
-		return false;
-	
-	var nearest = wiz[0]
-	var min_dist = global_position.distance_to(nearest.global_position)
-	
-	for e in wiz:
-		var d = global_position.distance_to(e.global_position)
-		if d < min_dist:
-			nearest = e
-			min_dist = d
-	
-	if (facing_right and (nearest.global_position.x > global_position.x))  or (not facing_right and (nearest.global_position.x < global_position.x)):
-		return true
-	else:
-		return false
 		
 
 func get_angle_between(p1: Vector2, p2: Vector2) -> float:
@@ -179,7 +194,18 @@ func start_parry():
 	state = State.PARRY
 	parry_window_open = true
 	if get_neareast_ememy_type() == Enemy_Type.FIREWIZARD:
+		fw_parry_mode = true
 		anim.play("fw_parry")
+	elif get_neareast_ememy_type() == Enemy_Type.EAGLEMAN:
+		if eagle_parry_count == 0:
+			anim.play("eagle_parry1")
+		elif eagle_parry_count == 1:
+			anim.play("eagle_parry2")
+		else:
+			anim.play("eagle_parry3")
+		if eagle_parry_count > 0:
+			eagleman_parry_progress(eagle_parry_attacker_current)
+
 	else:
 		var anim_name = parry_animations[randi() % parry_animations.size()]
 		anim.play(anim_name)
@@ -187,12 +213,14 @@ func start_parry():
 
 # 敌人攻击检测时调用：返回是否被成功弹反
 func try_parry(attacker: Node = null) -> bool:
-	if state == State.PARRY and parry_window_open and (is_facing_nearest_enemy() or is_facing_nearest_wiz()):
+	parry_effect_sparks.position.y = 0
+	parry_effect_shockwave.position.y = 0
+	if state == State.PARRY and parry_window_open and (is_facing_nearest_enemy()):
 		if attacker:
 			if attacker.is_in_group("firewizard"):
 				# FireWizard → 进入持续检测模式
 				if Input.is_action_pressed("parry"):
-					fw_parry_mode = true
+
 					fw_parry_timer = 0.0
 					fw_parry_attacker_current = attacker
 					fw_attack_angle = get_angle_between(self.position,attacker.position)
@@ -201,7 +229,15 @@ func try_parry(attacker: Node = null) -> bool:
 				else:
 					die()
 					return false
-			
+			elif attacker.is_in_group("eagleman"):
+				eagle_parry_count = 1
+				eagle_parry_timer = 0.0
+				eagle_parry_attacker_current = attacker
+				parry_effect_sparks.position.y = attacker.global_position.y - global_position.y
+				parry_effect_shockwave.position.y = attacker.global_position.y - global_position.y
+				play_parry_effect(facing_right)
+				parry_sfx_list[2].play()
+				return true  # 尚未完成
 			# 普通敌人立即结算
 			return normal_parry_success(attacker)
 	
@@ -225,6 +261,44 @@ func normal_parry_success(attacker: Node) -> bool:
 
 	return true
 
+func eagleman_parry_progress(attacker: Node) -> bool:
+	# 后续按键 → 检查间隔
+	if eagle_parry_timer <= eagle_parry_max_interval:
+		eagle_parry_count += 1
+		play_parry_effect(facing_right)
+		if eagle_parry_count >= eagle_parry_required:
+			# 成功
+			parry_sfx_list[0].play()
+			return eagleman_parry_success(attacker)
+		else:
+			parry_sfx_list[1].play()
+			eagle_parry_timer = 0.0
+			return false
+	else:
+		# 超时 → 失败
+		die()
+		eagle_parry_count = 0
+		
+		return false
+
+func play_eagleman_parry_anim(step: int):
+	var anim_names = ["eagle_parry1", "eagle_parry2", "eagle_parry3"]
+	if step < anim_names.size():
+		anim.play(anim_names[step])
+		anim.speed_scale = anim.get_sprite_frames().get_animation_speed(anim_names[step]) * (parry_duration / 0.3)
+
+func eagleman_parry_success(attacker: Node) -> bool:
+	eagle_parry_count = 0
+	eagle_parry_timer = 0.0
+	print("Eagleman Parry success!")
+	play_parry_effect(facing_right)
+	var ui = get_tree().root.get_node_or_null("Main/UI")
+	if ui:
+		ui.add_parry()
+
+	if attacker.is_in_group("eagleman") and attacker.has_method("on_parried"):
+		attacker.on_parried()
+	return true
 
 func fw_parry_success(attacker: Node):
 	fw_parry_mode = false
@@ -239,7 +313,8 @@ func fw_parry_success(attacker: Node):
 	if ui:
 		ui.add_parry()
 	
-	if attacker.is_in_group("firewizard") :
+ 
+	if attacker.is_in_group("firewizard") : 
 		if attacker.has_method("on_parried"):
 			attacker.on_parried()
 	# FireWizard 攻击 → 生成光罩
@@ -274,7 +349,7 @@ func _on_animation_finished():
 	if anim.animation == "death":
 		await $DeathSFX.finished
 		queue_free()
-	elif anim.animation in ["attack1", "attack2"]:
+	elif anim.animation in ["attack1", "attack2", "eagle_parry1", "eagle_parry2", "eagle_parry3"]:
 		if not is_dead:
 			if fw_parry_mode and Input.is_action_pressed("parry"):
 				state = State.PARRY

@@ -6,7 +6,7 @@ enum State { IDLE, MOVE, ATTACK, HURT, DEATH}
 @onready var collision: CollisionShape2D = $CollisionShape2D      
 var marked_for_deletion := false
 
-var jump_distance = 450
+var jump_distance = 350
 var state: State = State.IDLE
 var speed := 200.0
 var attack_range := 50.0
@@ -16,6 +16,7 @@ var is_dead := false
 var jump_time := 0.0
 var jump_amp := 40.0        # 飞行高度振幅
 var jump_speed := 1.0       # 飞行频率
+var attck_count = 0;
 
 func _ready():
 	anim.play("idle")
@@ -55,17 +56,21 @@ func move_to_player(delta: float):
 	
 	var dir = (player.global_position - global_position).normalized()
 	global_position += dir * speed * delta
-
+	if global_position.distance_to(player.global_position) < attack_range+10 and player.fw_parry_mode:
+		start_hurt()
+		return
 	# 如果进入攻击范围并且冷却结束 → 攻击
 	if global_position.distance_to(player.global_position) < attack_range and attack_timer <= 0:
 		start_attack(player)
 
 
 func start_attack(player):
+	if player.fw_parry_mode:
+		start_hurt()
+		return
 	state = State.ATTACK
 	attack_timer = attack_cooldown
 	anim.play("attack1")
-	$FireSFX.play()
 	
 	# 在攻击帧检查是否被弹反（延迟调用更真实）
 	await get_tree().create_timer(0.4).timeout
