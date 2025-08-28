@@ -2,6 +2,7 @@ extends Node2D
 
 @export var enemy_scene: PackedScene
 @export var fire_wizard_scene: PackedScene   # ✅ 新增：FireWizard 场景
+@export var eagle_man_scene: PackedScene   # ✅ 新增：EagleMan 场景
 @onready var player = $Player
 @onready var spawn_timer: Timer = $SpawnTimer
 @onready var ui = $UI
@@ -65,14 +66,16 @@ func _on_spawn_timer_timeout():
 	# ✅ 判断是否解锁 FireWizard
 	if not fire_wizard_unlocked and normal_kill_count >= 1:
 		fire_wizard_unlocked = true
+	spawn_eagle_man()
+	spawn_timer.wait_time = randf_range(3.0, 5.0)   # FireWizard 刷新间隔
 	# ✅ 刷新逻辑
-	if fire_wizard_unlocked and randf() < 0.2:  
-		spawn_fire_wizard()
-		spawn_timer.wait_time = randf_range(3.0, 5.0)   # FireWizard 刷新间隔
-
-	else:
-		spawn_enemy()
-		spawn_timer.wait_time = randf_range(0.55, 0.8)   # 普通敌人刷间隔
+	#if fire_wizard_unlocked and randf() < 0.2:  
+		#spawn_fire_wizard()
+		#spawn_timer.wait_time = randf_range(3.0, 5.0)   # FireWizard 刷新间隔
+#
+	#else:
+		#spawn_enemy()
+		#spawn_timer.wait_time = randf_range(0.55, 0.8)   # 普通敌人刷间隔
 
 	spawn_timer.start()
 
@@ -105,6 +108,13 @@ func spawn_fire_wizard():
 	wiz.add_to_group("firewizard")
 	wiz.set_meta("is_normal", false)
 
+
+func spawn_eagle_man():
+	var eagle = eagle_man_scene.instantiate()
+	add_child(eagle)
+	place_enemy(eagle)
+	eagle.add_to_group("eagleman")
+	eagle.set_meta("is_normal", false)
 
 func place_enemy(enemy: Node2D):
 	var side = randi() % 2

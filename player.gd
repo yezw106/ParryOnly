@@ -174,6 +174,8 @@ func play_parry_effect(is_facing_right: bool):
 
 # 开始弹反
 func start_parry():
+	if is_dead == true:
+		return
 	state = State.PARRY
 	parry_window_open = true
 	if get_neareast_ememy_type() == Enemy_Type.FIREWIZARD:

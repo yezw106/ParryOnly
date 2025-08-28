@@ -1,31 +1,42 @@
 extends Area2D
 
-enum State { IDLE, RUN, ATTACK, HURT, DEATH}
+enum State { IDLE, MOVE, ATTACK, HURT, DEATH}
 
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 @onready var collision: CollisionShape2D = $CollisionShape2D      
 var marked_for_deletion := false
 
-
+var jump_distance = 450
 var state: State = State.IDLE
-var speed := 350.0
-var attack_range := 60.0
+var speed := 200.0
+var attack_range := 50.0
 var attack_cooldown := 2.0
 var attack_timer := 0.0
 var is_dead := false
+var jump_time := 0.0
+var jump_amp := 40.0        # 飞行高度振幅
+var jump_speed := 1.0       # 飞行频率
 
 func _ready():
 	anim.play("idle")
 	anim.connect("animation_finished", _on_animation_finished)
 
 func _process(delta: float):
+	var player = get_tree().get_first_node_in_group("player")
 	match state:
 		State.IDLE:
-			var player = get_tree().get_first_node_in_group("player")
 			if player:
-				state = State.RUN
-				anim.play("run")
-		State.RUN:
+				state = State.MOVE
+		State.MOVE:
+			if player:
+				if global_position.distance_to(player.global_position) > jump_distance:
+					anim.play("walk")
+				else:
+					speed = jump_distance - attack_range
+					jump_time += delta * jump_speed
+					var curve_y = -jump_amp * abs(sin(jump_time * PI)) - 11  # 先上升再下降
+					anim.position.y = curve_y
+					anim.play("jump")
 			move_to_player(delta)
 		State.ATTACK:
 			pass
@@ -96,7 +107,7 @@ func die():
 func set_facing_right(facing: bool):
 	if facing:
 		anim.flip_h = false
-		anim.position.x -=5
+		anim.position.x += 15
+		$Shadow.position.x += 15
 	else:
 		anim.flip_h = true
-		$Shadow.position.x += 20

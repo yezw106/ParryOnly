@@ -1,10 +1,11 @@
-[gd_scene load_steps=95 format=4 uid="uid://glim5s7884u4"]
+[gd_scene load_steps=96 format=4 uid="uid://glim5s7884u4"]
 
 [ext_resource type="Script" uid="uid://da7hmlbo01sfh" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://ds086gf6748cv" path="res://player.tscn" id="2_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://du8d6pwfdxj6e" path="res://enemy.tscn" id="2_h2yge"]
 [ext_resource type="PackedScene" uid="uid://nfpskfjecux2" path="res://fire_wizard.tscn" id="3_0cbny"]
 [ext_resource type="PackedScene" uid="uid://bfmjy77xw2lrb" path="res://ui.tscn" id="3_7mycd"]
+[ext_resource type="PackedScene" uid="uid://bckohljfl3ick" path="res://eagle_man.tscn" id="4_0cbny"]
 [ext_resource type="Texture2D" uid="uid://bjnusfx20nt1g" path="res://isometric/isometric tileset/spritesheet.png" id="4_1bvp3"]
 [ext_resource type="Texture2D" uid="uid://b61dexew5lph" path="res://tileset/craftpix-net-504452-free-village-pixel-tileset-for-top-down-defense/1 Tiles/FieldsTileset.png" id="4_lquwl"]
 [ext_resource type="Texture2D" uid="uid://r7fatuguvr06" path="res://tileset/craftpix-net-665131-free-fields-tileset-pixel-art-for-tower-defense/1 Tiles/FieldsTileset.png" id="6_f6a44"]
@@ -567,6 +568,7 @@ loop = true
 script = ExtResource("1_ig7tw")
 enemy_scene = ExtResource("2_h2yge")
 fire_wizard_scene = ExtResource("3_0cbny")
+eagle_man_scene = ExtResource("4_0cbny")
 
 [node name="UI" parent="." instance=ExtResource("3_7mycd")]
 
