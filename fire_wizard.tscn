@@ -437,6 +437,7 @@ animations = [{
 }]
 
 [node name="FireWizard" type="Area2D"]
+visible = false
 script = ExtResource("1_k2y55")
 
 [node name="Shadow" type="Sprite2D" parent="."]

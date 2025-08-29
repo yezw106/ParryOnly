@@ -44,7 +44,8 @@ func move_to_player(delta: float):
 	
 	var dir = (player.global_position - global_position).normalized()
 	global_position += dir * speed * delta
-
+	if global_position.distance_to(player.global_position) < 350:
+		visible = true
 	# 如果进入攻击范围并且冷却结束 → 攻击
 	if global_position.distance_to(player.global_position) < attack_range and attack_timer <= 0:
 		start_attack(player)
