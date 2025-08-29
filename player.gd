@@ -233,8 +233,8 @@ func try_parry(attacker: Node = null) -> bool:
 				eagle_parry_count = 1
 				eagle_parry_timer = 0.0
 				eagle_parry_attacker_current = attacker
-				parry_effect_sparks.position.y = attacker.global_position.y - global_position.y
-				parry_effect_shockwave.position.y = attacker.global_position.y - global_position.y
+				parry_effect_sparks.position.y = (attacker.global_position.y - global_position.y)/2
+				parry_effect_shockwave.position.y = (attacker.global_position.y - global_position.y)/2
 				play_parry_effect(facing_right)
 				parry_sfx_list[2].play()
 				return true  # 尚未完成
