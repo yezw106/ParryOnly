@@ -5,8 +5,6 @@ extends Node2D
 @export var eagle_man_scene: PackedScene   # ✅ 新增：EagleMan 场景
 @onready var player = $Player
 @onready var spawn_timer: Timer = $SpawnTimer
-@onready var spawn_timer_wiz: Timer = $SpawnTimerWiz
-@onready var spawn_timer_ea: Timer = $SpawnTimerEa
 @onready var ui = $UI
 
 var screen_size: Vector2
@@ -20,31 +18,22 @@ var spawn_decay := 0.95        # 每次刷怪间隔衰减系数（越小 → 越
 var current_min_time := 0.5    # 当前最小间隔，初始较大
 var current_max_time := 0.8    # 当前最大间隔，初始较大
 
-
 func _ready():
 	add_to_group("game")  # 让 UI 可以 call_group("game", "start_game")
 	$BattleBGM.play()
 	screen_size = get_viewport().get_visible_rect().size
 	spawn_timer.timeout.connect(_on_spawn_timer_timeout)
-	spawn_timer_wiz.timeout.connect(_on_spawn_timer_wiz_timeout)
-	spawn_timer_ea.timeout.connect(_on_spawn_timer_ea_timeout)
 	spawn_timer.stop() # 默认不开启，等玩家点击 Start
-	spawn_timer_wiz.stop() # 默认不开启，等玩家点击 Start
-	spawn_timer_ea.stop()
+
 
 
 func start_game():
 	# 从 UI 按钮调用
 	if player and not player.is_dead:
 		# 初始化计时区间
-		#spawn_timer.wait_time = randf_range(current_min_time, current_max_time)
-		#spawn_timer.start()
-		#
-		#spawn_timer_wiz.wait_time = randf_range(3.0, 5.0)
-		#spawn_timer_wiz.start()
-		
-		spawn_timer_ea.wait_time = randf_range(2.0, 3.0)
-		spawn_timer_ea.start()
+		spawn_timer.wait_time = randf_range(current_min_time, current_max_time)
+		spawn_timer.start()
+
 
 
 func game_over():
@@ -71,7 +60,6 @@ func game_over():
 		if is_instance_valid(ea):
 			ea.queue_free()
 	# 显示 UI 的 Game Over
-	var ui = get_node_or_null("UI")
 	if ui:
 		ui.show_game_over()
 
@@ -79,45 +67,27 @@ func game_over():
 func _on_spawn_timer_timeout():
 	if not is_instance_valid(player) or player.is_dead:
 		return  # 玩家死了就不再刷敌人
-	spawn_enemy()
-
-	# 逐渐缩短间隔
-	current_min_time = max(spawn_min_time, current_min_time * spawn_decay)
-	current_max_time = max(spawn_max_time, current_max_time * spawn_decay)
-
-	spawn_timer.wait_time = randf_range(current_min_time, current_max_time)
-	spawn_timer.start()
-
-func _on_spawn_timer_wiz_timeout():
-	if not is_instance_valid(player) or player.is_dead:
-		return  # 玩家死了就不再刷敌人
-
-	# ✅ 判断是否解锁 FireWizard
-	if not fire_wizard_unlocked and normal_kill_count >= 20:
-		fire_wizard_unlocked = true
-
-	# ✅ 刷新逻辑
-	if fire_wizard_unlocked:  
-		spawn_fire_wizard()
-		spawn_timer.wait_time = randf_range(3.0, 5.0)   # FireWizard 刷新间隔
-
-	spawn_timer_wiz.start()
-
-func _on_spawn_timer_ea_timeout():
-	if not is_instance_valid(player) or player.is_dead:
-		return  # 玩家死了就不再刷敌人
 
 	## ✅ 判断是否解锁 FireWizard
-	if not eagle_man_unlocked and normal_kill_count >= 10:
+	if not eagle_man_unlocked and normal_kill_count >= 0:
 		eagle_man_unlocked = true
-	spawn_eagle_man()
-	spawn_timer_ea.wait_time = randf_range(2.0, 3.0)   # EagleMan 刷新间隔
-	# ✅ 刷新逻辑
-	#if eagle_man_unlocked:  
-		#spawn_eagle_man()
-		#spawn_timer_ea.wait_time = randf_range(2.0, 3.0)   # EagleMan 刷新间隔
 
-	spawn_timer_ea.start()
+	if not fire_wizard_unlocked and normal_kill_count >= 0:
+		fire_wizard_unlocked = true
+
+	var rand = randf()
+	# ✅ 刷新逻辑
+	if eagle_man_unlocked and rand < 0.15:  
+		spawn_eagle_man()
+		spawn_timer.wait_time = randf_range(2.25, 2.4)   # EagleMan 刷新间隔
+	elif fire_wizard_unlocked and rand >= 0.15 and rand <=0.3: # and rand <=0.4
+		spawn_fire_wizard()
+		spawn_timer.wait_time = randf_range(2.0, 2.25) 
+	else:
+		spawn_enemy()
+		spawn_timer.wait_time = randf_range(0.55, 0.8)
+	spawn_timer.start()
+
 
 func spawn_enemy():
 	var enemy = enemy_scene.instantiate()

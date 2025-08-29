@@ -155,22 +155,22 @@ region = Rect2(144, 0, 48, 48)
 [sub_resource type="SpriteFrames" id="SpriteFrames_606se"]
 animations = [{
 "frames": [{
-"duration": 0.5,
+"duration": 0.4,
 "texture": SubResource("AtlasTexture_606se")
 }, {
-"duration": 0.5,
+"duration": 0.4,
 "texture": SubResource("AtlasTexture_u1c27")
 }, {
-"duration": 0.5,
+"duration": 0.4,
 "texture": SubResource("AtlasTexture_op7ga")
 }, {
-"duration": 0.5,
+"duration": 0.4,
 "texture": SubResource("AtlasTexture_q13i1")
 }, {
-"duration": 0.5,
+"duration": 0.4,
 "texture": SubResource("AtlasTexture_pylmc")
 }, {
-"duration": 0.5,
+"duration": 0.4,
 "texture": SubResource("AtlasTexture_pbfsw")
 }],
 "loop": false,
@@ -178,22 +178,22 @@ animations = [{
 "speed": 8.0
 }, {
 "frames": [{
-"duration": 0.5,
+"duration": 0.4,
 "texture": SubResource("AtlasTexture_sweqy")
 }, {
-"duration": 0.5,
+"duration": 0.4,
 "texture": SubResource("AtlasTexture_2hs0m")
 }, {
-"duration": 0.5,
+"duration": 0.4,
 "texture": SubResource("AtlasTexture_1jxqw")
 }, {
-"duration": 0.5,
+"duration": 0.4,
 "texture": SubResource("AtlasTexture_dw050")
 }, {
-"duration": 0.5,
+"duration": 0.4,
 "texture": SubResource("AtlasTexture_b26j0")
 }, {
-"duration": 0.5,
+"duration": 0.4,
 "texture": SubResource("AtlasTexture_n7ghd")
 }],
 "loop": false,
@@ -361,7 +361,7 @@ shape = SubResource("CapsuleShape2D_1jxqw")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(8, -8)
 sprite_frames = SubResource("SpriteFrames_606se")
-animation = &"eagle_parry1"
+animation = &"attack2"
 
 [node name="ParrySFX1" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("7_1jxqw")

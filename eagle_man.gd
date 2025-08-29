@@ -6,7 +6,7 @@ enum State { IDLE, MOVE, ATTACK, HURT, DEATH}
 @onready var collision: CollisionShape2D = $CollisionShape2D      
 var marked_for_deletion := false
 
-var jump_distance = 350
+var jump_distance = 450
 var state: State = State.IDLE
 var speed := 200.0
 var attack_range := 50.0
