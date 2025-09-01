@@ -24,6 +24,7 @@ var fw_parry_timer := 0.0       # 记录已经坚持了多久
 var fw_parry_attacker_current: Node = null   # 当前正在防御的 firewizard
 var fw_attack_angle:float = 0.0
 
+
 # Eagleman 弹反逻辑相关
 var eagle_parry_count := 0         # 当前已成功输入次数
 var eagle_parry_timer := 0.0       # 距离上次输入的时间
@@ -70,7 +71,8 @@ func _process(delta: float):
 					fw_parry_timer += delta
 					if fw_parry_timer >= fw_parry_required:
 						# 成功弹反 FireWizard
-						fw_parry_success(fw_parry_attacker_current)
+						if fw_parry_attacker_current and fw_parry_attacker_current.is_in_group("firewizard"):
+							fw_parry_success(fw_parry_attacker_current)
 		State.HURT:
 			pass # 在受伤状态，等待动画结束
 	# 追踪 eagleman 连击输入的间隔
@@ -105,7 +107,7 @@ func get_neareast_ememy_type() -> Enemy_Type:
 
 	# 🔹 检查 firewizard
 	for w in wiz:
-		var d = global_position.distance_to(w.global_position) - w.attack_range - 50
+		var d = global_position.distance_to(w.global_position) - w.attack_range - 15
 		if d < min_dist:
 			min_dist = d
 			nearest = w
@@ -165,8 +167,10 @@ func set_facing_right(facing: bool):
 	anim.flip_h = not facing  # 向右时 flip_h = false, 向左时 flip_h = true
 	if not facing:
 		$Shadow.position.x = 15
+		$FireEffect.position.x = 15
 	else:
 		$Shadow.position.x = 0
+		$FireEffect.position.x = 0
 
 
 func play_parry_effect(is_facing_right: bool):
@@ -194,7 +198,6 @@ func start_parry():
 	state = State.PARRY
 	parry_window_open = true
 	if get_neareast_ememy_type() == Enemy_Type.FIREWIZARD:
-		fw_parry_mode = true
 		anim.play("fw_parry")
 	elif get_neareast_ememy_type() == Enemy_Type.EAGLEMAN:
 		if eagle_parry_count == 0:
@@ -220,7 +223,7 @@ func try_parry(attacker: Node = null) -> bool:
 			if attacker.is_in_group("firewizard"):
 				# FireWizard → 进入持续检测模式
 				if Input.is_action_pressed("parry"):
-
+					fw_parry_mode = true
 					fw_parry_timer = 0.0
 					fw_parry_attacker_current = attacker
 					fw_attack_angle = get_angle_between(self.position,attacker.position)
@@ -294,7 +297,7 @@ func eagleman_parry_success(attacker: Node) -> bool:
 	play_parry_effect(facing_right)
 	var ui = get_tree().root.get_node_or_null("Main/UI")
 	if ui:
-		ui.add_parry()
+		ui.add_parry_ea()
 
 	if attacker.is_in_group("eagleman") and attacker.has_method("on_parried"):
 		attacker.on_parried()
@@ -311,12 +314,12 @@ func fw_parry_success(attacker: Node):
 	
 	var ui = get_tree().root.get_node_or_null("Main/UI")
 	if ui:
-		ui.add_parry()
+		ui.add_parry_wiz()
 	
  
-	if attacker.is_in_group("firewizard") : 
-		if attacker.has_method("on_parried"):
-			attacker.on_parried()
+	if fw_parry_attacker_current and fw_parry_attacker_current.is_in_group("firewizard") : 
+		if fw_parry_attacker_current.has_method("on_parried"):
+			fw_parry_attacker_current.on_parried()
 	# FireWizard 攻击 → 生成光罩
 
 func spawn_shield():

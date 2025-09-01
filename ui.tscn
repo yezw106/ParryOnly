@@ -1,21 +1,72 @@
-[gd_scene load_steps=7 format=3 uid="uid://bfmjy77xw2lrb"]
+[gd_scene load_steps=10 format=3 uid="uid://bfmjy77xw2lrb"]
 
 [ext_resource type="Script" uid="uid://bq74gyxsjxf0d" path="res://ui.gd" id="1_fyqef"]
 [ext_resource type="FontFile" uid="uid://ums84xrpnq3g" path="res://sprites/font/pixellari/Pixellari.ttf" id="2_m6e0p"]
+[ext_resource type="Texture2D" uid="uid://5lwqu4ch3l5m" path="res://sprites/1 Woodcutter/woodCutter_head.png" id="3_ibotj"]
+[ext_resource type="Texture2D" uid="uid://dcrc54k723ley" path="res://sprites/craftpix-net-605776-free-yokai-pixel-art-character-sprites/Karasu_tengu/eagleman_head.png" id="4_n5ude"]
+[ext_resource type="Texture2D" uid="uid://ck21pr3ek33uk" path="res://sprites/craftpix-net-529677-free-wizard-sprite-sheets-pixel-art/Fire Wizard/fire_wizard_head.png" id="5_y4yjw"]
+[ext_resource type="FontFile" uid="uid://b3w2pq4senex2" path="res://font/ark-pixel-font-12px-monospaced-ttf-v2025.08.24/ark-pixel-12px-monospaced-zh_cn.ttf" id="6_n5ude"]
 
-[sub_resource type="InputEventKey" id="InputEventKey_fyqef"]
-device = -1
-keycode = 4194309
+[sub_resource type="Animation" id="Animation_n5ude"]
+resource_name = "appear"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 1.5, 1.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.0001, 1.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
 
-[sub_resource type="Shortcut" id="Shortcut_m6e0p"]
-events = [SubResource("InputEventKey_fyqef")]
+[sub_resource type="Animation" id="Animation_y4yjw"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
 
-[sub_resource type="InputEventKey" id="InputEventKey_27fn8"]
-device = -1
-keycode = 4194309
-
-[sub_resource type="Shortcut" id="Shortcut_nltto"]
-events = [SubResource("InputEventKey_27fn8")]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_waa4j"]
+_data = {
+&"RESET": SubResource("Animation_y4yjw"),
+&"appear": SubResource("Animation_n5ude")
+}
 
 [node name="UI" type="CanvasLayer"]
 script = ExtResource("1_fyqef")
@@ -24,13 +75,14 @@ script = ExtResource("1_fyqef")
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -31.0
-offset_right = 31.0
-offset_bottom = 23.0
+offset_left = 315.0
+offset_top = 5.0
+offset_right = 559.0
+offset_bottom = 28.0
 grow_horizontal = 2
 size_flags_horizontal = 4
 theme_override_fonts/font = ExtResource("2_m6e0p")
-text = "弹反： 0"
+text = "        0               0                 0"
 
 [node name="StartScreen" type="Control" parent="."]
 layout_mode = 3
@@ -39,10 +91,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+offset_left = -26.0
+offset_top = -8.0
+offset_right = 14.0
+offset_bottom = 32.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -53,38 +105,136 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -36.0
+offset_left = -39.0
 offset_top = -49.5
-offset_right = 36.0
+offset_right = 33.0
 offset_bottom = -18.5
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_fonts/font = ExtResource("2_m6e0p")
-shortcut = SubResource("Shortcut_m6e0p")
-text = "Start Game!"
+focus_neighbor_top = NodePath("../../ChallengeMode/ChallengeButton")
+focus_neighbor_bottom = NodePath("../../ChallengeMode/ChallengeButton")
+theme_override_fonts/font = ExtResource("6_n5ude")
+text = "无尽模式"
 
 [node name="GameOverScreen" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_left = 539.0
+offset_left = 540.0
 offset_top = 237.0
-offset_right = 579.0
+offset_right = 580.0
 offset_bottom = 277.0
 
 [node name="RetryButton" type="Button" parent="GameOverScreen"]
 layout_mode = 0
-offset_left = 1.0
-offset_top = 35.0
-offset_right = 73.0
-offset_bottom = 66.0
-theme_override_fonts/font = ExtResource("2_m6e0p")
-shortcut = SubResource("Shortcut_nltto")
-text = "Retry!"
+offset_left = -39.0
+offset_top = 29.0
+offset_right = 113.0
+offset_bottom = 60.0
+theme_override_fonts/font = ExtResource("6_n5ude")
+text = "按“回车”再玩一次"
 
 [node name="Label" type="Label" parent="GameOverScreen"]
-layout_mode = 0
-offset_left = -7.0
-offset_right = 85.0
-offset_bottom = 23.0
-theme_override_fonts/font = ExtResource("2_m6e0p")
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -57.5
+offset_top = -36.0
+offset_right = 101.5
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("6_n5ude")
+theme_override_font_sizes/font_size = 31
 text = "Game Over!"
+horizontal_alignment = 1
+
+[node name="NormalHead" type="Sprite2D" parent="."]
+position = Vector2(930, 23)
+texture = ExtResource("3_ibotj")
+
+[node name="EaglemanHead" type="Sprite2D" parent="."]
+position = Vector2(995, 16)
+scale = Vector2(0.405, 0.405)
+texture = ExtResource("4_n5ude")
+
+[node name="FireWizardHead" type="Sprite2D" parent="."]
+position = Vector2(1099, 6)
+scale = Vector2(0.745, 0.745)
+texture = ExtResource("5_y4yjw")
+
+[node name="LevelUp" type="Label" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -44.0
+offset_top = -64.68
+offset_right = 46.0
+offset_bottom = -41.68
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("6_n5ude")
+theme_override_font_sizes/font_size = 16
+text = "难度升级!"
+horizontal_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="LevelUp"]
+libraries = {
+&"": SubResource("AnimationLibrary_waa4j")
+}
+
+[node name="Title" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -352.0
+offset_top = -145.5
+offset_right = 352.0
+offset_bottom = 31.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("6_n5ude")
+theme_override_font_sizes/font_size = 50
+text = "无 尽 弹 反"
+horizontal_alignment = 1
+
+[node name="ChallengeMode" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -26.0
+offset_top = -46.0
+offset_right = 14.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ChallengeButton" type="Button" parent="ChallengeMode"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -39.0
+offset_top = -49.5
+offset_right = 33.0
+offset_bottom = -18.5
+grow_horizontal = 2
+grow_vertical = 2
+focus_neighbor_top = NodePath("../../StartScreen/StartButton")
+focus_neighbor_bottom = NodePath("../../StartScreen/StartButton")
+theme_override_fonts/font = ExtResource("6_n5ude")
+text = "通关模式"

@@ -14,10 +14,10 @@ func _process(delta: float) -> void:
 	var is_player_facing_right = player.facing_right
 	$FireEffect.rotation = -(180 + player.fw_attack_angle)/180 * PI
 	if is_player_facing_right:
-		$FireEffect.position.x = 70
+		$FireEffect.position.x = 75
 		$Glow.position.x = 0
 		$Circle.position.x = 0
 	else:
-		$FireEffect.position.x = -54
+		$FireEffect.position.x = -59
 		$Glow.position.x = 15
 		$Circle.position.x = 15

@@ -58,7 +58,7 @@ func start_attack(player):
 	$FireSFX.play()
 	
 	# 在攻击帧检查是否被弹反（延迟调用更真实）
-	await get_tree().create_timer(0.4).timeout
+	await get_tree().create_timer(0.45).timeout
 	if player and player.try_parry(self):
 		# 被弹反
 		pass
